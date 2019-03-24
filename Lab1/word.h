@@ -26,6 +26,7 @@ private:
     int tmp_x = 0;
     int mmaxLength[10000]; //当前最长单词字母
     int maxLengthPre[10000];//最长字母路径
+    int tmpLengthPre[10000];
     int nodeIn[10000];//入度
     bool flag[10000];//是否被标记
     queue<int>node;
@@ -37,21 +38,28 @@ public:
     void maxLength();
     void Print_DFS(int *a, int x);
     void maxWordDfs(int x);
+    void maxLengthDfs(int x);
 };
 
 int Word::Init(FILE * fin)
 {
+    char tmp;
     while(!feof(fin)){
         char ch = fgetc(fin);
+        if(ch == EOF){
+            if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z'))
+                wordNumber++;
+            break;
+        }
         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
             if (ch >= 'a' && ch <= 'z')
                 wordList[wordNumber] += ch;
             else wordList[wordNumber] += (ch - 'A' + 'a');
         }
-        else if(ch != EOF){
+        else {
             wordNumber++;
         }
-        else break;
+        tmp = ch;
     }
 }
 
@@ -128,7 +136,7 @@ void Word::maxWord()
             printf("No Word Chain\n");
             return;
         }
-        cout << mmmaxWord << endl;
+        // cout << mmmaxWord << endl;
         for (int i = 0; i < wordNumber; i++){
             if (mmaxWord[i] == mmmaxWord){
                 Print_DFS(maxWordPre, i);
@@ -189,7 +197,39 @@ void Word::maxWordDfs(int x)//对于环查dfs
 
 void Word::maxLength()
 {
-
+    for (int i = 0; i < wordNumber; i++){
+        flag[i] = true;
+        maxLengthDfs(i);
+        flag[i] = false;
+    }
+    Print_DFS(maxLengthPre, tmp_x);
+    cout << wordList[tmp_x] << endl;
 }
+
+void Word::maxLengthDfs(int x){
+    vector<int>::iterator It;
+    for (It = Edge[x].begin(); It != Edge[x].end(); It++){
+        if(flag[*It])continue;
+        if (mmaxLength[*It] < mmaxLength[x] + wordList[*It].size()){
+            int tmp = mmaxLength[*It];
+            mmaxLength[*It] = mmaxLength[x] + wordList[*It].size();
+            flag[*It] = true;
+            tmpLengthPre[*It] = x;
+
+            maxLengthDfs(*It);
+            
+            flag[*It] = false;
+            mmaxLength[*It] = tmp;
+            tmpLengthPre[*It] = 0;
+        }
+    }
+    if(tmp_max < mmaxLength[x]){
+        tmp_max = mmaxLength[x];
+        tmp_x = x;
+        for (int i = 0; i < wordNumber; i++)
+            maxLengthPre[i] = tmpLengthPre[i];
+    }
+}
+
 
 #endif

@@ -15,8 +15,12 @@ int main(int argc, char* argv[]){
             word_list.makeEdge();
             word_list.maxWord();
         }
-        else {
-
+        else if (argv[1][1] == 'c'){
+            word_list.makeEdge();
+            word_list.maxLength();
         }
+    }
+    else {
+        
     }
 }
