@@ -21,7 +21,10 @@ private:
 
     int mmaxWord[10000]; //当前最长单词数目
     int maxWordPre[10000];//最长单词路径
-    int mmaxLength[10000];//当前最长单词字母
+    int tmpWordPre[10000];
+    int tmp_max = 0;
+    int tmp_x = 0;
+    int mmaxLength[10000]; //当前最长单词字母
     int maxLengthPre[10000];//最长字母路径
     int nodeIn[10000];//入度
     bool flag[10000];//是否被标记
@@ -33,6 +36,7 @@ public:
     void maxWord();
     void maxLength();
     void Print_DFS(int *a, int x);
+    void maxWordDfs(int x);
 };
 
 int Word::Init(FILE * fin)
@@ -114,20 +118,40 @@ void Word::maxWord()
             } 
         }
     }
-    int mmmaxWord = 0;
+    bool tmp_flag = false;
     for (int i = 0; i < wordNumber; i++){
-        mmmaxWord = max(mmmaxWord, mmaxWord[i]);
+        if (nodeIn[i] != 0)//有环 dfs
+            tmp_flag = true;
     }
-    if (mmmaxWord == 1){
-        printf("No Word Chain\n");
-        return;
-    }
-    cout << mmmaxWord << endl;
-    for (int i = 0; i < wordNumber; i++){
-        if(mmaxWord[i] == mmmaxWord){
-            Print_DFS(maxWordPre, i);
-            cout << wordList[i] << endl;
+    if(!tmp_flag){
+        int mmmaxWord = 0;
+        for (int i = 0; i < wordNumber; i++){
+            mmmaxWord = max(mmmaxWord, mmaxWord[i]);
         }
+        if (mmmaxWord == 1){
+            printf("No Word Chain\n");
+            return;
+        }
+        cout << mmmaxWord << endl;
+        for (int i = 0; i < wordNumber; i++){
+            if (mmaxWord[i] == mmmaxWord){
+                Print_DFS(maxWordPre, i);
+                cout << wordList[i] << endl;
+                return;
+            }
+        }
+    }
+    else {
+        tmp_max = 0;
+        for (int j = 0; j < wordNumber; j++)
+            tmpWordPre[j] = maxWordPre[j];
+        for (int i = 0; i < wordNumber; i++){
+            if (nodeIn[i] != 0 && flag[i] == false){
+                maxWordDfs(i);
+            }
+        }
+        Print_DFS(maxWordPre, tmp_x);
+        cout << wordList[tmp_x] << endl;
     }
 }
 
@@ -137,9 +161,39 @@ void Word::Print_DFS(int *a, int x){
     cout << wordList[a[x]] << endl;
 }
 
+void Word::maxWordDfs(int x)//对于环查dfs
+{
+    if (Edge[x].size() == 0){
+        if(tmp_max < mmaxWord[x]){
+            tmp_max = mmaxWord[x];
+            tmp_x = x;
+            for (int i = 0; i < wordNumber; i++)maxWordPre[i] = tmpWordPre[i];
+        }
+        return;
+    }
+    vector<int>::iterator It;
+    for (It = Edge[x].begin(); It != Edge[x].end(); It++){
+        if(!flag[*It]){
+            if(mmaxWord[*It] < mmaxWord[x] + 1){
+                int tmp = mmaxWord[*It];
+
+                mmaxWord[*It] = mmaxWord[x] + 1;
+                flag[*It] = true;
+                tmpWordPre[*It] = x;
+                
+                maxWordDfs(*It);
+
+                mmaxWord[*It] = tmp;
+                flag[*It] = false;
+                tmpWordPre[*It] = 0;
+            } 
+        }
+    }
+}
+
 void Word::maxLength()
 {
-    
+
 }
 
 #endif
