@@ -43,18 +43,15 @@ int Word::Init(FILE * fin)
 {
     while(!feof(fin)){
         char ch = fgetc(fin);
-        if (ch == EOF){
-            wordNumber++;
-            break;
-        }
         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
             if (ch >= 'a' && ch <= 'z')
                 wordList[wordNumber] += ch;
             else wordList[wordNumber] += (ch - 'A' + 'a');
         }
-        else {
+        else if(ch != EOF){
             wordNumber++;
         }
+        else break;
     }
 }
 
@@ -95,8 +92,9 @@ void Word::maxWord()
         minNodeIn = min(minNodeIn, nodeIn[i]);
     }
     for (int i = 0; i < wordNumber; i++){
-        if(minNodeIn == nodeIn[i]){
-            node.push(i); mmaxWord[i] = 1; flag[i] = true; maxWordPre[i] = -1;
+        mmaxWord[i] = 1;
+        if(nodeIn[i] == 0){
+            node.push(i); flag[i] = true; maxWordPre[i] = -1;
         }
     }
     vector<int>::iterator It;
@@ -104,9 +102,7 @@ void Word::maxWord()
         int curNode = node.front();
         node.pop();
         for (It = Edge[curNode].begin(); It != Edge[curNode].end(); It++){
-            // cout << curNode << " " << *It << endl;
             if (flag[*It]) continue;
-            // mmaxWord[*It] = max(mmaxWord[*It], mmaxWord[curNode] + 1);
             if (mmaxWord[*It] < mmaxWord[curNode] + 1){
                 mmaxWord[*It] = mmaxWord[curNode] + 1;
                 maxWordPre[*It] = curNode;
@@ -147,7 +143,9 @@ void Word::maxWord()
             tmpWordPre[j] = maxWordPre[j];
         for (int i = 0; i < wordNumber; i++){
             if (nodeIn[i] != 0 && flag[i] == false){
+                flag[i] = true;
                 maxWordDfs(i);
+                flag[i] = false;
             }
         }
         Print_DFS(maxWordPre, tmp_x);
@@ -156,21 +154,13 @@ void Word::maxWord()
 }
 
 void Word::Print_DFS(int *a, int x){
-    if(a[x] == -1)return;
+    if(a[x] == -1 || a[x] == x)return;
     Print_DFS(a, a[x]);
     cout << wordList[a[x]] << endl;
 }
 
 void Word::maxWordDfs(int x)//对于环查dfs
 {
-    if (Edge[x].size() == 0){
-        if(tmp_max < mmaxWord[x]){
-            tmp_max = mmaxWord[x];
-            tmp_x = x;
-            for (int i = 0; i < wordNumber; i++)maxWordPre[i] = tmpWordPre[i];
-        }
-        return;
-    }
     vector<int>::iterator It;
     for (It = Edge[x].begin(); It != Edge[x].end(); It++){
         if(!flag[*It]){
@@ -188,6 +178,12 @@ void Word::maxWordDfs(int x)//对于环查dfs
                 tmpWordPre[*It] = 0;
             } 
         }
+    }
+    if (tmp_max < mmaxWord[x]){
+        tmp_max = mmaxWord[x];
+        tmp_x = x;
+        for (int i = 0; i < wordNumber; i++)
+            maxWordPre[i] = tmpWordPre[i];
     }
 }
 
