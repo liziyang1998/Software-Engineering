@@ -1,5 +1,5 @@
-#ifndef WORD
-#define WORD
+#ifndef MAXWORDLENGTH
+#define MAXWORDLENGTH
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -9,11 +9,11 @@
 
 using namespace std;
 
-class Word
+class max_Word_Length
 {
 private:
     string wordList[10000];
-    vector<int>Edge[10000];
+    vector<int>Edge[2][10000];
     //init
     int wordNumber = 0;
     int wordHead[26][1000];
@@ -27,7 +27,7 @@ private:
     int mmaxLength[10000]; //当前最长单词字母
     int maxLengthPre[10000];//最长字母路径
     int tmpLengthPre[10000];
-    int nodeIn[10000];//入度
+    int nodeIn[2][10000];//0 = 入度 1 = 出度
     bool flag[10000];//是否被标记
     queue<int>node;
 public:
@@ -39,9 +39,14 @@ public:
     void Print_DFS(int *a, int x);
     void maxWordDfs(int x);
     void maxLengthDfs(int x);
+
+    void maxWordHeadAndTail(char head, char tail);
+    void maxWordHead(char head);
+    void maxWordTail(char tail);
+    void maxWordHeadAndTailDfs(int flag_head, char h, int flag_tail, char t, int anti);
 };
 
-int Word::Init(FILE * fin)
+int max_Word_Length::Init(FILE *fin)
 {
     char tmp;
     while(!feof(fin)){
@@ -63,14 +68,14 @@ int Word::Init(FILE * fin)
     }
 }
 
-void Word::Print()
+void max_Word_Length::Print()
 {
     for (int i = 0; i < wordNumber; i++){
         cout << wordList[i] << endl;
     }
 }
 
-void Word::makeEdge()
+void max_Word_Length::makeEdge()
 {
     for (int i = 0; i < wordNumber; i++){
         int h = wordList[i][0] - 'a';
@@ -82,13 +87,15 @@ void Word::makeEdge()
         int t = wordList[i][wordList[i].size() - 1] - 'a';
         for (int j = 1; j <= wordHead[t][0]; j++){
             if (i == wordHead[t][j]) continue;
-            Edge[i].push_back(wordHead[t][j]);
-            nodeIn[wordHead[t][j]]++;
+            Edge[0][i].push_back(wordHead[t][j]);
+            Edge[1][wordHead[t][j]].push_back(i);
+            nodeIn[0][wordHead[t][j]]++;
+            nodeIn[1][i]++;
         }
     }
 }
 
-void Word::maxWord()
+void max_Word_Length::maxWord()
 {
     while(!node.empty())node.pop();
     memset(flag, 0, sizeof(flag));
@@ -97,7 +104,7 @@ void Word::maxWord()
 
     int minNodeIn = 1000000;
     for (int i = 0; i < wordNumber; i++){
-        minNodeIn = min(minNodeIn, nodeIn[i]);
+        minNodeIn = min(minNodeIn, nodeIn[0][i]);
     }
     for (int i = 0; i < wordNumber; i++){
         mmaxWord[i] = 1;
@@ -109,13 +116,13 @@ void Word::maxWord()
     while(!node.empty()){
         int curNode = node.front();
         node.pop();
-        for (It = Edge[curNode].begin(); It != Edge[curNode].end(); It++){
+        for (It = Edge[0][curNode].begin(); It != Edge[0][curNode].end(); It++){
             if (flag[*It]) continue;
             if (mmaxWord[*It] < mmaxWord[curNode] + 1){
                 mmaxWord[*It] = mmaxWord[curNode] + 1;
                 maxWordPre[*It] = curNode;
             }
-            nodeIn[*It]--;
+            nodeIn[0][*It]--;
             if(nodeIn[*It] == 0){
                 node.push(*It);
                 flag[*It] = true;
@@ -161,16 +168,17 @@ void Word::maxWord()
     }
 }
 
-void Word::Print_DFS(int *a, int x){
+void max_Word_Length::Print_DFS(int *a, int x)
+{
     if(a[x] == -1 || a[x] == x)return;
     Print_DFS(a, a[x]);
     cout << wordList[a[x]] << endl;
 }
 
-void Word::maxWordDfs(int x)//对于环查dfs
+void max_Word_Length::maxWordDfs(int x) //对于环查dfs
 {
     vector<int>::iterator It;
-    for (It = Edge[x].begin(); It != Edge[x].end(); It++){
+    for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
         if(!flag[*It]){
             if(mmaxWord[*It] < mmaxWord[x] + 1){
                 int tmp = mmaxWord[*It];
@@ -195,7 +203,7 @@ void Word::maxWordDfs(int x)//对于环查dfs
     }
 }
 
-void Word::maxLength()
+void max_Word_Length::maxLength()
 {
     for (int i = 0; i < wordNumber; i++){
         flag[i] = true;
@@ -206,9 +214,10 @@ void Word::maxLength()
     cout << wordList[tmp_x] << endl;
 }
 
-void Word::maxLengthDfs(int x){
+void max_Word_Length::maxLengthDfs(int x)
+{
     vector<int>::iterator It;
-    for (It = Edge[x].begin(); It != Edge[x].end(); It++){
+    for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
         if(flag[*It])continue;
         if (mmaxLength[*It] < mmaxLength[x] + wordList[*It].size()){
             int tmp = mmaxLength[*It];
@@ -231,5 +240,39 @@ void Word::maxLengthDfs(int x){
     }
 }
 
+void max_Word_Length::maxWordHead(char head)
+{
+    int h = head - 'a';
+    for (int i = 1; i <= wordHead[h][0]; i++){
+        flag[wordHead[h][i]] = true;
+        maxWordHeadAndTailDfs(1, wordHead[h][i], 0, '\0', 0);
+        flag[wordHead[h][i]] = false;
+    }
+}
+
+void max_Word_Length::maxWordTail(char tail)
+{
+
+}
+
+void max_Word_Length::maxWordHeadAndTail(char head, char tail)
+{
+
+}
+
+void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, char h, int flag_tail, char t, int anti)
+{
+    if (flag_head){
+        if (flag_tail){
+
+        }
+        else {
+            
+        }
+    }
+    else {
+
+    }
+}
 
 #endif
