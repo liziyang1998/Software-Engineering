@@ -21,19 +21,32 @@ int main(int argc, char* argv[]){
         }
     }
     else if(argv[1][1] == 'n'){
-
-    }
-    else {
         fin = fopen(argv[4], "r");
         max_Word_Length word_list;
         word_list.Init(fin);
+        word_list.makeEdge();
+        word_list.wordLength(argv[2][0]);
+    }
+    else {
         if(argc > 5){//head and tail
+            fin = fopen(argv[6], "r");
+            max_Word_Length word_list;
+            word_list.Init(fin);
+            word_list.makeEdge();
             word_list.maxWordHeadAndTail(argv[2][0], argv[4][0]);
         }
         else if(argv[1][1] == 'h'){//head
+            fin = fopen(argv[4], "r");
+            max_Word_Length word_list;
+            word_list.Init(fin);
+            word_list.makeEdge();
             word_list.maxWordHead(argv[2][0]);
         }
         else {//tail
+            fin = fopen(argv[4], "r");
+            max_Word_Length word_list;
+            word_list.Init(fin);
+            word_list.makeEdge();
             word_list.maxWordTail(argv[2][0]);
         }
     }
