@@ -7,7 +7,6 @@ using namespace std;
 FILE * fin;
 
 int main(int argc, char* argv[]){
-    // cout << "+++++++++" << endl;
     if (argc == 3){
         fin = fopen(argv[2], "r");
         max_Word_Length word_list;
@@ -25,17 +24,14 @@ int main(int argc, char* argv[]){
         }
     }
     else if(argv[1][1] == 'n'){//指定单词数
-        // cout << "******" << endl;
         fin = fopen(argv[4], "r");
         max_Word_Length word_list;
         word_list.Init(fin);
-        // cout << "123121313" << endl;
         word_list.makeEdge();
         int n = 0;
         for (int i = 0; i < strlen(argv[2]); i++){
             n = n * 10 + argv[2][i] - '0';
         }
-        // cout << n << endl;
         word_list.wordLength(n);
     }
     else {
