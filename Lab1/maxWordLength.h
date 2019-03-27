@@ -36,6 +36,10 @@ private:
     int tmp_x = 0;
 //标记数组
     bool flag[10000];
+//长度为n的单词链数目
+    int wordSum = 0;
+    string wordAnswer[10000];
+
 public:
 //调试
     void Print();
@@ -61,6 +65,7 @@ public:
 //搜索指定长度的单词
     void wordLength(int n);
     void wordLengthDfs(int x, int n);
+    void storeWord(int x, int n, int a);
 };
 
 int max_Word_Length::Init(FILE *fin)
@@ -416,7 +421,54 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
 
 void max_Word_Length::wordLength(int n)
 {
-    
+    n = n - (int)'0';
+    //猜想真是数据环并不多，搜索效率并不慢
+    for (int i = 0; i < wordNumber; i++)
+        mmaxWord[i] = 1;
+    for (int i = 0; i < wordNumber; i++)
+        maxWordPre[i] = -1, tmpWordPre[i] = -1;
+    for (int i = 0; i < wordNumber; i++){
+        flag[i] = true;
+        wordLengthDfs(i, n);
+        flag[i] = false;
+    }
+    int ans = wordSum / n;
+    cout << ans << endl;
+    for (int i = 0; i < ans; i++){
+        for (int j = 0; j < n; j++){
+            cout << wordAnswer[i*n+j] << endl;
+        }
+        cout << endl;
+    }
+}
+
+void max_Word_Length::wordLengthDfs(int x, int n)
+{
+    if (mmaxWord[x] == n){
+        storeWord(x, n, n);
+        return;
+    }
+    vector<int>::iterator It;
+    for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
+        if (!flag[*It]){
+            flag[*It] = true;
+            mmaxWord[*It] = mmaxWord[x] + 1;
+            tmpWordPre[*It] = x;
+            
+            wordLengthDfs(*It, n);
+
+            flag[*It] = false;
+            mmaxWord[*It] = 1;
+            tmpWordPre[*It] = -1;
+        }
+    }
+}
+
+void max_Word_Length::storeWord(int x, int n, int a)
+{
+    if (a == 0)return;
+    storeWord(tmpWordPre[x], n, a-1);
+    wordAnswer[wordSum++] = wordList[x];
 }
 
 #endif
