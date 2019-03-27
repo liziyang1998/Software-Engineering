@@ -9,6 +9,10 @@ FILE * fin;
 int main(int argc, char* argv[]){
     if (argc == 3){
         fin = fopen(argv[2], "r");
+        if (fin == NULL){
+            cout << "No File" << endl;
+            return 0;
+        }
         max_Word_Length word_list;
         word_list.Init(fin);
 #ifdef Debug
@@ -25,6 +29,10 @@ int main(int argc, char* argv[]){
     }
     else if(argv[1][1] == 'n'){//指定单词数
         fin = fopen(argv[4], "r");
+        if (fin == NULL){
+            cout << "No File" << endl;
+            return 0;
+        }
         max_Word_Length word_list;
         word_list.Init(fin);
         word_list.makeEdge();
@@ -37,6 +45,10 @@ int main(int argc, char* argv[]){
     else {
         if(argc > 5){//指定头和尾
             fin = fopen(argv[6], "r");
+            if (fin == NULL){
+                cout << "No File" << endl;
+                return 0;
+            }
             max_Word_Length word_list;
             word_list.Init(fin);
             word_list.makeEdge();
@@ -44,6 +56,10 @@ int main(int argc, char* argv[]){
         }
         else if(argv[1][1] == 'h'){//指定头
             fin = fopen(argv[4], "r");
+            if (fin == NULL){
+                cout << "No File" << endl;
+                return 0;
+            }
             max_Word_Length word_list;
             word_list.Init(fin);
             word_list.makeEdge();
@@ -51,6 +67,10 @@ int main(int argc, char* argv[]){
         }
         else {//指定尾
             fin = fopen(argv[4], "r");
+            if (fin == NULL){
+                cout << "No File" << endl;
+                return 0;
+            }
             max_Word_Length word_list;
             word_list.Init(fin);
             word_list.makeEdge();

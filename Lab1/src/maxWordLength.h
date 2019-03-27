@@ -72,7 +72,6 @@ int max_Word_Length::Init(FILE *fin)
 {
     char tmp;
     while(!feof(fin)){
-        // cout << "123132" << endl;
         char ch = fgetc(fin);
         if(ch == EOF){
             if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z'))
@@ -171,7 +170,7 @@ void max_Word_Length::maxWord()
         }
         //单个单词不成链
         if (mmmaxWord == 1){
-            printf("No Word Chain\n");
+            cout << "No Answer" << endl;
             return;
         }
         //找到最大值，递归求解
@@ -260,7 +259,6 @@ void max_Word_Length::maxLengthDfs(int x)
     for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
         if(flag[*It])continue;
         if (mmaxLength[*It] < mmaxLength[x] + wordList[*It].size()){
-            // cout << wordList[x] << " " << wordList[*It] << endl;
             int tmp = mmaxLength[*It];
             mmaxLength[*It] = mmaxLength[x] + wordList[*It].size();
             flag[*It] = true;
@@ -284,16 +282,13 @@ void max_Word_Length::maxLengthDfs(int x)
 void max_Word_Length::maxWordHead(char head)
 {
     int h = head - 'a';
-    // cout << h << endl;
     for (int i = 0; i < wordNumber; i++)
         maxWordPre[i] = -1, tmpWordPre[i] = -1;
     for (int i = 1; i <= wordHead[h][0]; i++)
         mmaxWord[wordHead[h][i]] = 1;
     //对于指定的开头字母可以根据初始化时保存下的wordHead数组迅速找到单词中所有以h开头的字母的编号
     //对于maxWordHeadAndTailDfs函数传入不同的参数可以搜索不同的结果
-    // cout << wordHead[h][0] << endl;
     for (int i = 1; i <= wordHead[h][0]; i++){
-        // cout << "*****" << endl;
         flag[wordHead[h][i]] = true;
         maxWordHeadAndTailDfs(1, wordHead[h][i], 0, 0, 0);
         flag[wordHead[h][i]] = false; 
@@ -388,12 +383,10 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
             }
         }
         else {
-            // cout << "&&&&&" << endl;
             vector<int>::iterator It;
             for (It = Edge[anti][h].begin(); It != Edge[anti][h].end(); It++){
                 if(!flag[*It]){
                     if(mmaxWord[*It] < mmaxWord[h] + 1){
-                        // cout << wordList[*It] << " " << wordList[h] << endl;
                         int tmp = mmaxWord[*It];
 
                         mmaxWord[*It] = mmaxWord[h] + 1;
@@ -453,18 +446,21 @@ void max_Word_Length::wordLength(int n)
         maxWordPre[i] = -1, tmpWordPre[i] = -1;
     for (int i = 0; i < wordNumber; i++){
         flag[i] = true;
-        // cout << "123" << endl;
         wordLengthDfs(i, n);
-        // cout << wordSum << endl;
         flag[i] = false;
     }
     int ans = wordSum / n;
-    cout << ans << endl;
-    for (int i = 0; i < ans; i++){
-        for (int j = 0; j < n; j++){
-            cout << wordAnswer[i*n+j] << endl;
+    if (ans == 0){
+        cout << "No Answer" << endl;
+    }
+    else {
+        cout << ans << endl;
+        for (int i = 0; i < ans; i++){
+            for (int j = 0; j < n; j++){
+                cout << wordAnswer[i*n+j] << endl;
+            }
+            cout << endl;
         }
-        cout << endl;
     }
 }
 
