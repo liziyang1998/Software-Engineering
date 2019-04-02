@@ -1,5 +1,5 @@
-#ifndef MAXWORDLENGTH
-#define MAXWORDLENGTH
+#ifndef CORE
+#define CORE
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -9,12 +9,14 @@
 
 using namespace std;
 
-class max_Word_Length
+class Core
 {
 private:
 //储存单词和数量
     int wordNumber = 0;
     string wordList[10000];
+//储存答案
+    int answer = 0;
 //储存正反边和点的入度出度以及拓扑过程用到的队列
     vector<int>Edge[2][10000];
     int nodeIn[2][10000];//0 = 入度 1 = 出度
@@ -44,53 +46,57 @@ public:
 //调试
     void Print();
 //初始化
-    int Init(FILE * fin);
+    int Init(char* word[], int len);
     void makeEdge();//建边
 //最长单词数目
-    void maxWord();
+    int maxWord(char *Result[]);
     void maxWordDfs(int x);
 //最多字母
-    void maxLength();
+    int maxLength(char *Result[]);
     void maxLengthDfs(int x);
 //同一递归输出前驱（用于递归输出单词）
-    void Print_DFS(int *a, int x);
+    void Print_DFS(int *a, int x, char* Result[]);
 //分别对应指定头尾
 //指定头
 //指定尾
-    void maxWordHeadAndTail(char head, char tail);
-    void maxWordHead(char head);
-    void maxWordTail(char tail);
-//利用标记分别对应三种情况进行搜索求解
-    void maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail, int t, int anti);
-//搜索指定长度的单词
+    int maxWordHeadAndTail(char head, char tail, char * Result[], int FLAG);
+    int maxWordHead(char head, char *Result[], int FLAG);
+    int maxWordTail(char tail, char *Result[], int FLAG);
+    //利用标记分别对应三种情况进行搜索求解
+    void maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail, int t, int anti, int FLAG);
+    //搜索指定长度的单词
     void wordLength(int n);
     void wordLengthDfs(int x, int n);
     void storeWord(int x, int n, int a);
 };
 
-int max_Word_Length::Init(FILE *fin)
+int Core::Init(char* word[], int len)
 {
-    char tmp;
-    while(!feof(fin)){
-        char ch = fgetc(fin);
-        if(ch == EOF){
-            if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z'))
-                wordNumber++;
-            break;
-        }
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
-            if (ch >= 'a' && ch <= 'z')
-                wordList[wordNumber] += ch;
-            else wordList[wordNumber] += (ch - 'A' + 'a');
-        }
-        else {
-            wordNumber++;
-        }
-        tmp = ch;
-    }
+    wordNumber = len;
+    for (int i = 0; i < len; i++)
+        wordList[i] = word[i];
+
+    // char tmp;
+    // while(!feof(fin)){
+    //     char ch = fgetc(fin);
+    //     if(ch == EOF){
+    //         if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z'))
+    //             wordNumber++;
+    //         break;
+    //     }
+    //     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
+    //         if (ch >= 'a' && ch <= 'z')
+    //             wordList[wordNumber] += ch;
+    //         else wordList[wordNumber] += (ch - 'A' + 'a');
+    //     }
+    //     else {
+    //         wordNumber++;
+    //     }
+    //     tmp = ch;
+    // }
 }
 
-void max_Word_Length::Print()//Debug
+void Core::Print()//Debug
 {
     for (int i = 0; i < wordNumber; i++){
         cout << wordList[i] << endl;
@@ -100,7 +106,7 @@ void max_Word_Length::Print()//Debug
 /*
 建边过程中采用分别保存头尾的方法，降低循环的复杂度
 */
-void max_Word_Length::makeEdge()
+void Core::makeEdge()
 {
     for (int i = 0; i < wordNumber; i++){
     //对单词的头和尾把编号分别放到相应的数组中
@@ -127,7 +133,7 @@ void max_Word_Length::makeEdge()
 先将没有环的部分用拓扑排序找出最长的单词长度，然后对于环的部分采用暴力搜索
 不过两者时间复杂度基本一致
 */
-void max_Word_Length::maxWord()
+int Core::maxWord(char* Result[])
 {
     //设置拓扑排序，找入度为0的点
     for (int i = 0; i < wordNumber; i++)
@@ -171,14 +177,15 @@ void max_Word_Length::maxWord()
         //单个单词不成链
         if (mmmaxWord == 1){
             cout << "No Answer" << endl;
-            return;
+            return 0;
         }
         //找到最大值，递归求解
         for (int i = 0; i < wordNumber; i++){
             if (mmaxWord[i] == mmmaxWord){
-                Print_DFS(maxWordPre, i);
-                cout << wordList[i] << endl;
-                return;
+                Print_DFS(maxWordPre, i, Result);
+                strcpy(Result[answer++], wordList[i].c_str());
+                // cout << wordList[i] << endl;
+                return answer;
             }
         }
     }
@@ -193,19 +200,20 @@ void max_Word_Length::maxWord()
                 flag[i] = false;
             }
         }
-        Print_DFS(maxWordPre, tmp_x);
-        cout << wordList[tmp_x] << endl;
+        Print_DFS(maxWordPre, tmp_x, Result);
+        strcpy(Result[answer++], wordList[tmp_x].c_str());
+        return answer;
+        // cout << wordList[tmp_x] << endl;
     }
 }
 
-void max_Word_Length::Print_DFS(int *a, int x)//递归数组a，a为传进来的不同的前驱数组
+void Core::Print_DFS(int *a, int x, char *Result[]) //递归数组a，a为传进来的不同的前驱数组
 {
     if(a[x] == -1 || a[x] == x)return;
-    Print_DFS(a, a[x]);
-    cout << wordList[a[x]] << endl;
+    Print_DFS(a, a[x], Result);
+    strcpy(Result[answer++], wordList[a[x]].c_str());
 }
-
-void max_Word_Length::maxWordDfs(int x) //对于环查dfs
+void Core::maxWordDfs(int x) //对于环查dfs
 {
     vector<int>::iterator It;
     for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
@@ -233,7 +241,7 @@ void max_Word_Length::maxWordDfs(int x) //对于环查dfs
     }
 }
 
-void max_Word_Length::maxLength()//对于最多字母数目，同样可以先拓扑排序再搜索，这里直接写了搜索，因为两者时间复杂度一致均为 O(VE)
+int Core::maxLength(char* Result[])//对于最多字母数目，同样可以先拓扑排序再搜索，这里直接写了搜索，因为两者时间复杂度一致均为 O(VE)
 {
     for (int i = 0; i < wordNumber; i++)
         maxLengthPre[i] = -1, tmpLengthPre[i] = -1;
@@ -246,14 +254,17 @@ void max_Word_Length::maxLength()//对于最多字母数目，同样可以先拓
     }
     if (maxLengthPre[tmp_x] == -1){
         cout << "No Answer" << endl;
+        return 0;
     }
     else {
-        Print_DFS(maxLengthPre, tmp_x);
-        cout << wordList[tmp_x] << endl;
+        Print_DFS(maxLengthPre, tmp_x, Result);
+        strcpy(Result[answer++], wordList[tmp_x].c_str());
+        return answer;
+        // cout << wordList[tmp_x] << endl;
     }
 }
 
-void max_Word_Length::maxLengthDfs(int x)
+void Core::maxLengthDfs(int x)
 {
     vector<int>::iterator It;
     for (It = Edge[0][x].begin(); It != Edge[0][x].end(); It++){
@@ -279,7 +290,7 @@ void max_Word_Length::maxLengthDfs(int x)
     }
 }
 
-void max_Word_Length::maxWordHead(char head)
+int Core::maxWordHead(char head, char *Result[], int FLAG)
 {
     int h = head - 'a';
     for (int i = 0; i < wordNumber; i++)
@@ -290,19 +301,22 @@ void max_Word_Length::maxWordHead(char head)
     //对于maxWordHeadAndTailDfs函数传入不同的参数可以搜索不同的结果
     for (int i = 1; i <= wordHead[h][0]; i++){
         flag[wordHead[h][i]] = true;
-        maxWordHeadAndTailDfs(1, wordHead[h][i], 0, 0, 0);
+        maxWordHeadAndTailDfs(1, wordHead[h][i], 0, 0, 0, FLAG);
         flag[wordHead[h][i]] = false; 
     }
     if (tmp_x == -1 || maxWordPre[tmp_x] == -1){
         cout << "No Answer" << endl;
+        return 0;
     }
     else {
-        Print_DFS(maxWordPre, tmp_x);
-        cout << wordList[tmp_x] << endl;
+        Print_DFS(maxWordPre, tmp_x, Result);
+        strcpy(Result[answer++], wordList[tmp_x].c_str());
+        return answer;
+        // cout << wordList[tmp_x] << endl;
     }
 }
 
-void max_Word_Length::maxWordTail(char tail)//方法同搜索以指定字母开头
+int Core::maxWordTail(char tail, char *Result[], int FLAG) //方法同搜索以指定字母开头
 {
     int t = tail - 'a';
     for (int i = 0; i < wordNumber; i++)
@@ -311,22 +325,26 @@ void max_Word_Length::maxWordTail(char tail)//方法同搜索以指定字母开�
         mmaxWord[wordTail[t][i]] = 1;
     for (int i = 1; i <= wordTail[t][0]; i++){
         flag[wordTail[t][i]] = true;
-        maxWordHeadAndTailDfs(0, 0, 1, wordTail[t][i], 1);
+        maxWordHeadAndTailDfs(0, 0, 1, wordTail[t][i], 1, FLAG);
         flag[wordTail[t][i]] = false;
     }
     if (tmp_x == -1 || maxWordPre[tmp_x] == -1){
         cout << "No Answer" << endl;
+        return 0;
     }
     else{
         while (maxWordPre[tmp_x] != -1){
-            cout << wordList[tmp_x] << endl;
+            strcpy(Result[answer++], wordList[tmp_x].c_str());
+            // cout << wordList[tmp_x] << endl;
             tmp_x = maxWordPre[tmp_x];
         }
-        cout << wordList[tmp_x] << endl;
+        strcpy(Result[answer++], wordList[tmp_x].c_str());
+        return answer;
+        // cout << wordList[tmp_x] << endl;
     }
 }
 
-void max_Word_Length::maxWordHeadAndTail(char head, char tail)
+int Core::maxWordHeadAndTail(char head, char tail, char * Result[], int FLAG)
 {
     int h = head - 'a';
     int t = tail - 'a';
@@ -337,19 +355,21 @@ void max_Word_Length::maxWordHeadAndTail(char head, char tail)
     //通过指定参数和dfs中的方法完成找以h开拓以t结尾的单词链
     for (int i = 1; i <= wordHead[h][0]; i++){
         flag[wordHead[h][i]] = true;
-        maxWordHeadAndTailDfs(1, wordHead[h][i], 1, t, 0);
+        maxWordHeadAndTailDfs(1, wordHead[h][i], 1, t, 0, FLAG);
         flag[wordHead[h][i]] = false;
     }
     if (tmp_x == -1 || maxWordPre[tmp_x] == -1){
         cout << "No Answer" << endl;
     }
     else {
-        Print_DFS(maxWordPre, tmp_x);
-        cout << wordList[tmp_x] << endl;
+        Print_DFS(maxWordPre, tmp_x, Result);
+        strcpy(Result[answer++], wordList[tmp_x].c_str());
+        return answer;
+        // cout << wordList[tmp_x] << endl;
     }
 }
 
-void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail, int t, int anti)
+void Core::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail, int t, int anti, int FLAG)
 {
     //根据参数不同，功能不同，过程基本一样，边界判断不同
     if (flag_head){
@@ -357,10 +377,10 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
             vector<int>::iterator It;
             for (It = Edge[anti][h].begin(); It != Edge[anti][h].end(); It++){
                 if(!flag[*It]){
-                    if(mmaxWord[*It] < mmaxWord[h] + 1){
+                    if(mmaxWord[*It] < mmaxWord[h] + (FLAG == 0? 1:wordList[*It].size())){
                         int tmp = mmaxWord[*It];
 
-                        mmaxWord[*It] = mmaxWord[h] + 1;
+                        mmaxWord[*It] = mmaxWord[h] + (FLAG == 0 ? 1 : wordList[*It].size());
                         flag[*It] = true;
                         tmpWordPre[*It] = h;
 
@@ -373,7 +393,7 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
                             }
                         }
                         
-                        maxWordHeadAndTailDfs(1, *It, 1, t, 0);
+                        maxWordHeadAndTailDfs(1, *It, 1, t, 0, FLAG);
 
                         mmaxWord[*It] = tmp;
                         flag[*It] = false;
@@ -386,14 +406,14 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
             vector<int>::iterator It;
             for (It = Edge[anti][h].begin(); It != Edge[anti][h].end(); It++){
                 if(!flag[*It]){
-                    if(mmaxWord[*It] < mmaxWord[h] + 1){
+                    if(mmaxWord[*It] < mmaxWord[h] + (FLAG == 0? 1:wordList[*It].size())){
                         int tmp = mmaxWord[*It];
 
-                        mmaxWord[*It] = mmaxWord[h] + 1;
+                        mmaxWord[*It] = mmaxWord[h] + (FLAG == 0? 1:wordList[*It].size());
                         flag[*It] = true;
                         tmpWordPre[*It] = h;
-                        
-                        maxWordHeadAndTailDfs(1, *It, 0, 0, 0);
+
+                        maxWordHeadAndTailDfs(1, *It, 0, 0, 0, FLAG);
 
                         mmaxWord[*It] = tmp;
                         flag[*It] = false;
@@ -413,14 +433,14 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
            vector<int>::iterator It;
            for (It = Edge[anti][t].begin(); It != Edge[anti][t].end(); It++){
                if(!flag[*It]){
-                   if(mmaxWord[*It] < mmaxWord[t] + 1){
+                   if (mmaxWord[*It] < mmaxWord[t] + (FLAG == 0 ? 1 : wordList[*It].size())){
                        int tmp = mmaxWord[*It];
 
-                       mmaxWord[*It] = mmaxWord[t] + 1;
+                       mmaxWord[*It] = mmaxWord[t] + (FLAG == 0 ? 1 : wordList[*It].size());
                        flag[*It] = true;
                        tmpWordPre[*It] = t;
-                       
-                       maxWordHeadAndTailDfs(0, 0, 1, *It, 1);
+
+                       maxWordHeadAndTailDfs(0, 0, 1, *It, 1, FLAG);
 
                        mmaxWord[*It] = tmp;
                        flag[*It] = false;
@@ -437,7 +457,7 @@ void max_Word_Length::maxWordHeadAndTailDfs(int flag_head, int h, int flag_tail,
     }
 }
 
-void max_Word_Length::wordLength(int n)
+void Core::wordLength(int n)
 {
     //猜想真是数据环并不多，搜索效率并不慢
     for (int i = 0; i < wordNumber; i++)
@@ -464,7 +484,7 @@ void max_Word_Length::wordLength(int n)
     }
 }
 
-void max_Word_Length::wordLengthDfs(int x, int n)
+void Core::wordLengthDfs(int x, int n)
 {
     if (mmaxWord[x] == n){
         storeWord(x, n, n);
@@ -486,7 +506,7 @@ void max_Word_Length::wordLengthDfs(int x, int n)
     }
 }
 
-void max_Word_Length::storeWord(int x, int n, int a)
+void Core::storeWord(int x, int n, int a)
 {
     if (a == 0)return;
     storeWord(tmpWordPre[x], n, a-1);
