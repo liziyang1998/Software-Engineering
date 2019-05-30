@@ -1,168 +1,739 @@
 \chapter{具体需求}
-<The following sections must be repeated for each requirement. >
-
-在每一条需求描述中重复下列部分
 \section{功能需求}
 This section describes how the input of the software is translated to the output. It describes the essential action the software must perform.
 
-For each kind of function, or each independent function in some cases, the requirements of input, process and output must be described, which are usually organized with the following four subsections:
-
 本子章节应描述软件产品的输入怎样被转换成输出。它描述了软件必须执行的基本动作。 
 
-对每一类功能或有时对每一个单独的功能，必须描述输入、处理、输出方面的需求。这些通常以下面四个子段落来组织：
-\subsection{功能需求1}
-Please don't use "Functional Requirement(1)" as the title of the functional requirement. Name the functional requirements with a few simple words and a requirement ID.  For example:
-
-R.INTF.CALC.001 Calculating expression
-
-R.INTF.CALC.002 Print
-
-Naming the requirement ID shall follow the Software Requirements Management Procedure (REP01)
-
-用需求编号加上简短词汇做为功能需求名，不要用“功能需求（1）”作为功能名，例如：R.INTF.CALC.001 计算表达式
-
-R.INTF.CALC.002 打印
-
-需求编号规则按照软件需求管理规程(REP01)进行
+\subsection{R.INTF.CALC.001 课程设置}
 \subsubsection{介绍}
-<Itemize the detailed functional requirements associated with this feature. These are the software capabilities that must be present in order for the user to carry out the services provided by the feature.  Include how the project should respond to anticipated error conditions or invalid inputs. Requirements should be concise, complete, unambiguous, verifiable, and necessary. Use "TBD" as a placeholder to indicate when necessary information is not yet available. >
 
-逐条列出与本特性相关的功能需求。包括项目如何响应预期的错误输入，非法条件和无效输入。需求应该简明，完整，不含糊，可验证，必要的。 当需要的信息不确定的时候使用“待定”。
+The course is managed by the teaching secretary.
+
+Includes opening a new course, deleting a course, setting a maximum number of courses, adding a course description, and adding a teacher contact
+
+For compulsory courses, set the class and class time
+
+For elective courses, set the time and place of class
+
+Course descriptions include but are not limited to: credits, hours, experimental hours, course number
+
+For illegal input, incorrect input, invalid input, you should refuse to fill in the database.
+
+课程设置由教学秘书管理。
+
+包含开设新课程，删除课程，设置课程人数上限，添加课程描述，添加教师信息
+
+对于必修课程，设置选课班级和上课时间地点
+
+对于选修课程，设置上课时间地点
+
+课程描述包括但不限于：学分、学时、实验学时、课程编号
+
+对于非法输入、错误输入、无效输入应该拒绝填写进入数据库
+
+
 \subsubsection{输入}
-This section consists of:
-A. Detailed description of all input data of the function, including:
-Source of input
-Quantify
-Measurement units
-Timing requirements
-Valid input range that contains the precision and tolerance
-B. Reference of interface specification or interface control document that are provided in proper place.
+A detailed description of all input data for this function, including:
 
-本子段落应包含下列内容：
+Input source: manual keyboard input
 
-A. 对该功能所有输入数据的详细描述，包括：
+Quantity: several
 
-		输入来源
-		数量
-		度量单位
-		时间要求
-		包含精度和容忍度的有效输入范围
-		
-B. 在适当的地方提供的对接口规格或接口控制文档的参考。
+Time requirement: before the start of the semester
+
+Valid input range with precision and tolerance: input should be an integer, 32-bit int
+
+对该功能所有输入数据的详细描述，包括：
+
+		输入来源：人工键盘输入
+
+		数量：若干
+
+		时间要求：学期开始前
+
+		包含精度和容忍度的有效输入范围：输入应为整数，为32位int型		
+
 \subsubsection{处理}
-Describes all the operations on the input data, and the process to get the output data, including the following specifications:
-A. Verification of input data
-B. Exact order of the operations, including the time sequene of each event.
-C. Response to exception, such as:
-		 Overflow
-		Communication failure
-		Error process
-D. Any method used to transfer the input data to the output data. (such as equation,mathematic algorithm and logical operation)
-For example.
-		The formula to calculate the income tax in a pay roll.
-		the weather model used for weather forecast
-E. Verification of output data.
+This subsection should describe all the operations performed on the input data and how to obtain the output. This includes the following specifications:
+
+A. Validation of input data.
+
+B. The exact order of operations: set new lessons -> (set class selection) -> set class time and place -> set the maximum number of courses -> add course description -> add teacher information
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs:
+Directly displayed on the client
+
+E. Validation of the output data.
+
 本子段落应描述对输入数据所执行的所有操作和如何获得输出的过程。这包括下列规格：
 
 A. 输入数据的有效性检测。
 
-B. 操作的确切次序，包括各事件的时序。
+B. 操作的确切次序：设置新课->(设置选课班级)->设置上课时间地点->设置课程人数上限->添加课程描述->添加教师信息
 
 C. 对异常情况的回应，例如：
-		溢出
-		通信失败
-		错误处理
-D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）。例如，这可能描述下列方面：
-		对工资单里代扣所得税的计算公式。
-		用于气象预报的气象模型。
+		
+	溢出：拒绝写入
+
+	通信失败：拒绝写入
+	
+	错误处理：提示具体错误信息
+	
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作):
+	直接显示在客户端
 		
 E.	对输出数据的有效性检测。
 \subsubsection{输出}
-This section should include:
-A. The detailed description of output data of the function, including:
-		Target to output to (Such as a printer or a file)
-		Quantity
-		Measurement units
-		Time sequence
-		Valid output range including the precision and tolerance
-		Process of the invalid value.
-		Error message.
-B. Reference of interface specification or interface control document that are provided in proper place.
-For the systems with their requirements focused on the input/output actions, all the important input/output actions and the time sequences of the input/output pairs should be described in the SRS. In a system that inputs and actions are memorized as the basis for the reactions to be taken, the timing sequence for the input/output pairs must be available here. This kind of functional action is similar to a status machine.  
-本子段落应包含：
+A detailed description of all output data for this function, this description includes:
 
-A. 对该功能所有输出数据的详细描述，这个描述包括：
-		输出的到何处（如打印机，文件）
-		数量
-		度量单位
-		时序
-		包含精确度和容忍度的有效输出范围
-		对非法值的处理
-		错误消息
+Output to the client
+
+Quantity: several
+
+Effective output range with precision and tolerance: integer, 32-bit int
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述，这个描述包括：
 		
-B. 在适当的地方提供对接口规格或接口控制文档的参考。
+	输出的到客户端
 
-此外，对那些需求集中在输入/输出行为的系统，SRS应描述所有重要的输入/输出行为及输入输出对的次序。对一个需要记忆其行为以根据输入和过去的行为进行反应的系统，输入输出对的次序是要求的；这种功能行为就类似于有限状态机。
+	数量：若干
+
+	包含精确度和容忍度的有效输出范围：整数，32位int型
+
+	对非法值的处理：返回错误代码
+	
+	错误消息：返回错误信息
+
+\subsection{R.INTF.CALC.002 选课/退课/课表查询}
+\subsubsection{介绍}
+
+Course selection, withdrawal, and class schedule enquiries are completed by students.
+
+Select electives in the system at the specified course time, review the compulsory courses that have been scheduled, and change shifts as needed.
+
+Withdrawal at the specified course time or personalization at the time of class selection
+
+View schedule information throughout the semester
+
+选课、退课、课表查询由学生完成。
+
+在规定的选课时间在系统中选择选修课，查看已经安排好的必修课并根据需求换班。
+
+在规定的选课时间退课或不在选课时间个性化退课
+
+整个学期内可以查看课表信息
+
+\subsubsection{输入}
+A detailed description of all input data for this function, including:
+
+Input source: manual input
+
+Quantity: several
+
+Time requirement: at the specified course time, usually before the start of the semester
+
+Valid input range with precision and tolerance: input should be an integer, 32-bit int
+
+对该功能所有输入数据的详细描述，包括：
+
+		输入来源：人工输入
+
+		数量：若干
+
+		时间要求：在规定的选课时间，一般为学期开始前
+
+		
+\subsubsection{处理}
+A. Validation of input data.
+
+B. The exact order of the operation: the student chooses an elective course and is allowed to withdraw only when there is the course and is an elective course.
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs:
+
+Direct output
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 操作的确切次序：学生选择选修课，只有在有该门课并且为选修课的时候允许退课
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入
+
+	通信失败：拒绝写入
+
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）：
+
+	直接输出
+		
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+A detailed description of all output data for this function:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: at the specified course time, usually before the start of the semester
+
+Effective output range with precision and tolerance: integer, 32-bit int
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述：
+
+	输出的到何处（如打印机，文件）：客户端
+
+	数量：若干
+
+	时间要求：在规定的选课时间，一般为学期开始前
+
+	对非法值的处理：返回错误代码
+
+	错误消息：返回错误信息
+	
+
+\subsection{R.INTF.CALC.003 课程抽签}
+\subsubsection{介绍}
+The course lottery is applied to the case where the number of enrolled electives is greater than the upper limit of the course. If the number of compulsory courses for a teacher reaches the upper limit, the student is no longer allowed to choose the teacher's course.
+
+Course lottery should be done automatically by the system.
+
+课程抽签应用于选修课报名人数大于课程上限的情况。如果某老师的必修课人数达到上限，则不再允许学生选该老师的该门课。
+
+课程抽签应该由系统自动完成。
+
+\subsubsection{输入}
+A detailed description of all input data for this function, including:
+
+Input source: student information
+
+Quantity: several
+
+Time requirement: after the class is over
+
+Valid input range with precision and tolerance: input should be an integer, 32-bit int
+
+对该功能所有输入数据的详细描述，包括：
+
+	输入来源：选课学生信息
+
+	数量：若干
+
+	时间要求：选课结束后
+
+	包含精度和容忍度的有效输入范围：输入应为整数，为32位int型
+		
+\subsubsection{处理}
+
+A. Validation of input data.
+
+B. Only when the number of electives is greater than the maximum number of students in the elective course, the lottery will be activated and the lottery will be drawn.
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs:
+
+Direct output
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 只有在选修课选修人数大于课程上限人数的时候激活课程抽签，抽签为随即抽签。
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入
+
+	通信失败：拒绝写入
+
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）：
+
+	直接输出选中学生信息
+
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+A detailed description of all output data for this function:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: after the lottery is over
+
+Effective output range with precision and tolerance: integer, 32-bit int
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述：
+
+	输出的到何处（如打印机，文件）：客户端
+
+	数量：若干
+
+	时间要求：抽签结束后
+
+	包含精确度和容忍度的有效输出范围：整数，32位int型
+
+	对非法值的处理：返回错误代码
+
+	错误消息：返回错误信息
+		
+
+\subsection{R.INTF.CALC.004 作业发布/教学资源共享}
+\subsubsection{介绍}
+This function is used by teachers and teaching assistants to publish assignments and teaching resources for students to view and download.
+
+该功能由教师和助教使用，发布作业和教学资源，方便学生查阅和下载
+
+\subsubsection{输入}
+A detailed description of all input data for this function, including:
+
+Input source: manual input
+
+Quantity: several
+
+Time requirement: the semester is in progress
+
+对该功能所有输入数据的详细描述，包括：
+
+	输入来源：人工输入
+
+	数量：若干
+
+	时间要求：学期进行中
+		
+\subsubsection{处理}
+
+A. Validation of input data.
+
+B. The exact sequence of operations: Teachers or teaching assistants post assignments and teaching resources after the course, which students can review and download.
+
+C. Response to anomalies, such as:
+
+Overflow: refuse to write,
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs. For example, this might describe the following:
+
+Direct output
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 操作的确切次序：教师或助教在课程后发布作业和教学资源，学生可以查阅和下载。
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入、
+
+	通信失败：拒绝写入
+	
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）。例如，这可能描述下列方面：
+
+	直接输出
+
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+
+A detailed description of all output data for this function:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: the semester is in progress
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述：
+
+	输出的到何处（如打印机，文件）：客户端
+	
+	数量：若干
+	
+	时间要求：学期进行中
+	
+	对非法值的处理：返回错误代码
+	
+	错误消息：返回错误信息
+
+\subsection{R.INTF.CALC.005 课程通知公告/邮件}
+\subsubsection{介绍}
+
+Relevant course information and announcements are issued by teachers or teaching assistants, and emails can be sent for reminders when necessary.
+
+由教师或助教发布相关课程信息和公告，必要时候可以发送邮件进行提醒。
+
+\subsubsection{输入}
+A detailed description of all input data for this function, including:
+
+Input source: manual input
+
+Quantity: several
+
+Time requirement: the semester is in progress
+
+对该功能所有输入数据的详细描述，包括：
+
+	输入来源：人工输入
+
+	数量：若干
+
+	时间要求：学期进行中
+	
+\subsubsection{处理}
+A. Validation of input data.
+
+B. The exact order of the operation: the teacher or the teaching assistant will post an announcement or email before the student can view it.
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs:
+
+Direct output
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 操作的确切次序：先由教师或助教发布公告或邮件，学生才可以查看。
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入
+	
+	通信失败：拒绝写入
+	
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）：
+	
+	直接输出
+		
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+A detailed description of all output data for this function, this description includes:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: the semester is in progress
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述，这个描述包括：
+
+	输出的到何处（如打印机，文件）：客户端
+
+	数量：若干
+
+	时间要求：学期进行中
+
+	对非法值的处理：返回错误代码
+
+	错误消息：返回错误信息
+		
+\subsection{R.INTF.CALC.006 成绩查询}
+\subsubsection{介绍}
+
+The results enquiry is completed by the students. The results enquiry can only be used to check the student's own performance and cannot be checked for other people's grades and average scores.
+
+成绩查询由学生完成，成绩查询仅可查询学生本人的成绩不可查阅他人成绩和平均分等。
+
+\subsubsection{输入}
+A detailed description of all input data for this function, including:
+
+Input source: grades entered by the teacher
+
+Quantity: several
+
+Time requirement: after the end of the semester
+
+Valid input range with precision and tolerance: input should be an integer, 32-bit int
+
+对该功能所有输入数据的详细描述，包括：
+
+	输入来源：教师输入的成绩
+
+	数量：若干
+	
+	时间要求：学期结束后
+	
+	包含精度和容忍度的有效输入范围：输入应为整数，为32位int型
+
+\subsubsection{处理}
+
+A. Validation of input data.
+
+B. The exact sequence of operations: Students are entered into the system by the teacher before they can be queried.
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs. For example, this might describe the following:
+
+Directly output the scores of students corresponding to the student number
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 操作的确切次序：先由教师将学生成绩录入系统，学生才可以查询。
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入
+	
+	通信失败：拒绝写入
+	
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）。例如，这可能描述下列方面：
+
+	直接输出对应学号学生的成绩
+		
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+A detailed description of all output data for this function, this description includes:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: after the teacher enters the grade
+
+Effective output range with precision and tolerance: integer, 32-bit int
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述，这个描述包括：
+
+	输出的到何处（如打印机，文件）：客户端
+
+	数量：若干
+
+	时间要求：教师录入成绩后
+
+	包含精确度和容忍度的有效输出范围：整数，32位int型
+
+	对非法值的处理：返回错误代码
+
+	错误消息：返回错误信息
+		
+\subsection{R.INTF.CALC.007 评课系统}
+\subsubsection{介绍}
+
+The review community is reviewed by students at the end of each semester and can be viewed at any time.
+
+评课社区由学生在每学期结束后发表评论，任何时间都可以查阅
+
+\subsubsection{输入}
+
+A detailed description of all input data for this function, including:
+
+Input source: Student evaluation
+
+Quantity: several
+
+Time requirement: after the end of the semester
+
+对该功能所有输入数据的详细描述，包括：
+
+	输入来源：学生评价
+
+	数量：若干
+
+	时间要求：学期结束后
+		
+\subsubsection{处理}
+A. Validation of input data.
+
+B. The exact sequence of operations: Students can evaluate at the end of the semester and can be consulted at any time.
+
+C. Response to anomalies, such as:
+
+Overflow: Reject write
+
+Communication failed: write refused
+
+Error handling: prompt specific error message
+
+D. Any method (such as equations, mathematical algorithms, logical operations) used to convert system inputs to corresponding outputs. For example, this might describe the following:
+
+Direct output to the client
+
+E. Validation of the output data.
+
+A. 输入数据的有效性检测。
+
+B. 操作的确切次序：学生在该学期课程结束后可以评价，任何时间都可以查阅。
+
+C. 对异常情况的回应，例如：
+
+	溢出：拒绝写入
+	
+	通信失败：拒绝写入
+	
+	错误处理：提示具体错误信息
+
+D. 用于把系统输入转换到相应输出的任何方法（诸如方程式，数学算法，逻辑操作）。例如，这可能描述下列方面：
+
+	直接输出到客户端
+
+E.	对输出数据的有效性检测。
+\subsubsection{输出}
+
+A detailed description of all output data for this function, this description includes:
+
+Where is the output (eg printer, file): client
+
+Quantity: several
+
+Time requirement: after the end of the semester
+
+Handling illegal values: return error code
+
+Error message: return error message
+
+对该功能所有输出数据的详细描述，这个描述包括：
+	
+	输出的到何处（如打印机，文件）：客户端
+	
+	数量：若干
+	
+	时间要求：学期结束后
+	
+	对非法值的处理：返回错误代码
+	
+	错误消息：返回错误信息
+
 \section{性能需求}
-<If there are performance requirements, state them here and explain their rationale, to help the developers understand the intent and make suitable design choices. Specifies the timing relationships for real time systems. Such requirements should be made as specific as possible. >
 
-如果有性能方面的需求，在这里列出并解释他们的原理。以帮助开发者理解意图以做出正确的设计选择。在实时系统中的时序关系。保证需求尽可能的详细而精确。
+For the integrated educational administration system, the amount of data is large, and there are many data processed during the peak period. Need to develop appropriate query and insertion algorithms and guarantee timing issues.
+
+对于综合教务系统，数据量大，在高峰期运算处理数据、访问量多。需要开发合适的查询和插入算法，并且保证时序问题。
+
 \subsection{性能需求1}
-Describes the statically and dynamically quantized requirements on the software (or the interaction between user and the software)
-Static quantized requirement could include:
-A. Maximum number of terminal supported.
-B. Maximum number of users that can use the software at the same time.
-C. Maximum number of files and records to be processed
-D. Maximum size of  tables and files
-Dynamically quantized requirements could include:
-A. Specific duration of normal value and peak value of workload (e.g., one hour)
-B. Number of event and task and data volume to be processed 
-All these requirements should be described by measurable term, for example, saying "95% of the events should be processed in 1 second", instead of saying "the operator need not wait for the business to complete."
-Note: The quantized constraint of a detailed requirement should be described in the subsection of the detailed requirement.
+This subsection should describe the static and dynamic quantitative requirements for software (or human and software interaction) as a whole.
+
+Static quantitative requirements may include:
+
+A. Number of supported terminals: no less than 5000
+
+B. Number of users supported for simultaneous use: no less than 5000
+
+C. Number of documents and records processed: no less than 10,000
+
+D. Table and file size: no more than 64M
+
+Dynamic quantitative requirements may include:
+
+A. Specific time period under normal and peak workload conditions: one hour
+
+B. The number of transactions and tasks processed and the amount of data: no less than 5000
+
 本子章节应从整体上描述静态和动态的量化的对软件（或人与软件交互）的需求。
 
 静态的量化需求可能包括：
 
-A. 支持的终端数目。
+A. 支持的终端数目：不低于5000
 
-B. 支持的同时使用的用户数目。
+B. 支持的同时使用的用户数目：不低于5000
 
-C.处理的文件和记录的数目。
+C. 处理的文件和记录的数目：不低于10000
 
-D.表和文件的大小。
+D. 表和文件的大小：不大于64M
 
 动态的量化需求可能包括:
 
-A. 在正常和峰值工作量条件下特定时间段（如一小时）
+A. 在正常和峰值工作量条件下特定时间段：一小时
 
-B. 处理的事务和任务的数目以及数据量。
+B. 处理的事务和任务的数目以及数据量：不低于5000
 
-所有的这些需求应以可测量的术语进行描述，例如所有的操作应在1秒内被处理完成，而不是描述成操作员不必等待操作的完成。
-
-注意： 用于一个具体功能的量化限制通常在该功能的处理子章节中描述。
 \section{外部接口需求}
 \subsection{用户接口}
 <The interface of the system with the User and vice versa should be explained in detail. >
 
 详细描述系统与用户之间的接口
 
-This section should include:
-A. Features that must be supported by the software for eachman-machine interface. For example, if the user operates from a display terminal, then the following should be included:
-		Screen format required
-		Page layout and content of report and menu
-		Timing sequence for input and output
-		Usage of some functional key combinations
-B. Every aspect about the use of the system's user interface. It could be a list that shows the user what should do and what should not do.  For example, an option of overlong or overshort message. . And same as other requirements, these requirements should be easily verified. For example, saying "A level 4 typist can finish function X in Z minutes after a one-hour training." instead of "A typist can finish function X"	
+The features that the software must support for each human machine interface. For example, if a system user operates through a display terminal, it should include the following:
 
-这应描述下述内容：
+Required screen format: computer screen
 
-A. 对每种人机界面，软件所必须支持的特性。例如，如果系统用户通过一个显示终端进行操作，那么应包含下述内容：
-要求的屏幕格式
-页面规划及报告或菜单的内容
-输入和输出的相关时序
-一些组合功能键的用法
+Page planning and report or menu content: should include all of the above features
 
-B. 与系统用户接口使用相关的所有方面。这可能只是一个简单的关于系统怎样展示给用户而该做什么和不该做什么的列表。例如提供关于长或短错误消息选项。和所有其它需求一样，这些需求也应能被检验，例如，四级打字员经一小时的培训后能在Z分钟内完成功能X，而不是一个打字员能完成功能X。
+Input and output related timing: first input and then output
+
+对每种人机界面，软件所必须支持的特性。例如，如果系统用户通过一个显示终端进行操作，那么应包含下述内容：
+
+要求的屏幕格式：电脑端屏幕
+
+页面规划及报告或菜单的内容：应包含上述全部功能
+
+输入和输出的相关时序：先输入再输出
+
 
 \subsection{软件接口}
 <The interface with other system/modules/projects should be explained in detail. >
@@ -175,9 +746,6 @@ A. Name
 B. Mnemonic symbol
 C. Version number
 D. Source
-For each interface, this section should:
-A. Discuss the objective of the required software.
-B. Define the interfaces by content and format of message/function. If the interfaces have been clearly described in other documents, it is not necessary to describe in detail here. But the reference of those documents should be given.
 
 在此应描述如何使用其它（必需的）软件产品（例如，数据管理系统，操作系统，或算法工具包），以及与其它应用系统的接口（例如，协议处理系统和数据库管理系统之间的接口）。
 
@@ -186,12 +754,6 @@ A.	名字
 B.	助记符
 C.	版本号
 D.	来源
-
-对每个接口，本部分应：
-
-A .	讨论与本软件产品相关的接口软件的目的。
-
-B.	按消息/函数内容和格式定义接口。如果接口已在其它文档中很清楚地描述，就没有必要在这儿进行详细描述，但需说明应参考的文档。
 
 \subsection{硬件接口}
 <The interface with other hardware components should be explained in detail. >
@@ -204,7 +766,7 @@ Defines the interfaces according to the content and format of the software/hardw
 
 在此描述软件产品和系统硬件组件之间接口的逻辑特征，也包括支持哪些设备、怎样支持这些设备和协议等。
  
-按软/硬件协议内容和格式定义接口。如果接口已在其它文档中很清楚地描述，就没有必要在这儿进行详细描述，但需说明应参考的文档。
+按软/硬件协议内容和格式定义接口
 
 \subsection{通讯接口}
 <This should specify the various interfaces to communications such as local network protocols, etc.>
@@ -213,4 +775,4 @@ Defines the interfaces according to the content and format of the software/hardw
 
 Defines the interfaces according to the content and format of the message/function. If the interfaces have been clearly described in other documents, it is not necessary to describe in detail here. But the reference of those documents should be given.
 
-按消息/函数内容和格式定义接口。如果接口已在其它文档中很清楚地描述，就没有必要在这儿进行详细描述，但需说明应参考的文档。
+按消息/函数内容和格式定义接口。
