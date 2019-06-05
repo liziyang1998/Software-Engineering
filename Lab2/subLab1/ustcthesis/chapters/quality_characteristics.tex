@@ -1,8 +1,25 @@
 \chapter{软件质量特性}
-<Specify any additional quality characteristics for the project that will be important to either the customers or the developers. Some to consider are: adaptability, availability, correctness, flexibility, interoperability, maintainability, portability, reliability, reusability, robustness, testability, and usability. Write these to be specific, quantitative, and verifiable when possible. At the least, clarify the relative preferences for various attributes, such as ease of use over ease of learning.
 
-详细说明项目任何其他的质量特性。该特性对客户和开发者都非常重要。考虑的方面包括：适应性，可用性，正确性，灵活性，交互工作能力，可维护性，可移植性，可靠性，可重用性，鲁棒性，可测试性和可用性等。定量的详细描述这些特性，尽可能的可验证。对不同属性之间的重要性加以阐述，如：易用性比易学性更重要。
+\section{适应性}
+Should adapt to a variety of client browser environments, adapt to different environments according to different User-Agent
 
-<Please use the below sub-section for each attributes separately. You can copy the section for additional attributes. >
+应该适应各种客户端浏览器环境，根据不同的User-Agent适配不同的环境
 
-每一个属性单独使用一个小节描述，可根据需要进行增减，如增加可维护性小节等。
+\section{可移植性}
+Ensure that the server can be used on different platforms, and there is no problem that cannot be adapted after transplantation.
+
+保证服务端在不同的平台上都可以使用，不能存在移植后不能适应的问题
+
+\section{鲁棒性}
+For all interface inputs, the server must have a corresponding response.
+
+For malicious attacks, the server must have redundant modules.
+
+对于所有接口的输入，服务端都要保证有对应的应答
+
+对于恶意攻击，服务器要有冗余模块
+
+\section{交互工作能力}
+The interaction between the server and the client should ensure that the delay is within a certain range, and there should be a corresponding response for different client requests.
+
+服务端和客户端之间的交互要保证延迟在一定范围内，对于不同的客户端请求要有对应的应答
