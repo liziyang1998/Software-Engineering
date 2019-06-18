@@ -4,6 +4,9 @@
 \documentclass[bachelor]{ustcthesis}
 % bachelor|master|doctor
 \usepackage{ustcextra}
+\usepackage{graphicx} %插入图片的宏包
+\usepackage{float} %设置图片浮动位置的宏包
+\usepackage{subfigure} %插入多图时用子图显示的宏包
 \graphicspath{{figures/}}
 \bibliographystyle{ustcauthoryear}
 % \bibliographystyle{ustcnumerical}
@@ -34,7 +37,7 @@
 
 \begin{tabular}{ccc}
   & 人员 & 日期 \\ 
-拟制 & 李子旸\ 杨睿强\ 王五 & 2019-5-12 \\ 
+拟制 & 李子旸\ 杨睿强\  & 2019-5-12 \\ 
 评审人 & • & yyyy-mm-dd \\ 
 批准 & • & yyyy-mm-dd \\ 
 签发 & • & yyyy-mm-dd \\ 
@@ -60,7 +63,7 @@
 \input{chapters/design-interface}
 \input{chapters/design-data-structure}
 \input{chapters/design-database}
-\input{chapters/design-ui}
+% \input{chapters/design-ui}
 \input{chapters/design-error-handling}
 \input{chapters/design-security}
 \input{chapters/design-maintainance}
